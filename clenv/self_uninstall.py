@@ -78,7 +78,46 @@ def self_uninstall(log=None) -> bool:
 
     emit(f"\n  Detected install method: [{method}]")
 
-    if method == "pipx":
+    if os.name == "nt" and method in ("pip", "pipx"):
+        emit("  ℹ  Windows detected: uninstallation will complete in the background immediately after exit.")
+        if method == "pipx":
+            cmd = ["pipx", "uninstall", "clenv"]
+            resolved = shutil.which(cmd[0])
+            if resolved:
+                cmd[0] = resolved
+        else:
+            cmd = [sys.executable, "-m", "pip", "uninstall", "-y", "clenv"]
+
+        # Detached runner script that waits for parent process to exit
+        detached_script = (
+            "import sys, os, time, subprocess; "
+            "pid = int(sys.argv[1]); "
+            "cmd = sys.argv[2:]; "
+            "while True: "
+            "    try: "
+            "        os.kill(pid, 0); "
+            "        time.sleep(0.2); "
+            "    except OSError: "
+            "        break; "
+            "subprocess.run(cmd)"
+        )
+
+        try:
+            DETACHED_PROCESS = 0x00000008
+            subprocess.Popen(
+                [sys.executable, "-c", detached_script, str(os.getpid())] + cmd,
+                creationflags=DETACHED_PROCESS,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                close_fds=True
+            )
+            success = True
+        except Exception as e:
+            emit(f"  ✗ Failed to launch background uninstaller: {e}")
+            success = False
+
+    elif method == "pipx":
         cmd = ["pipx", "uninstall", "clenv"]
         resolved = shutil.which(cmd[0])
         if resolved:
