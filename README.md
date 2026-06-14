@@ -35,19 +35,19 @@ While it is easy to clean up desktop applications (they sit visibly in our Appli
 
 ---
 
-## 🚀 Install (one command)
+## 🚀 Installation
+
+Choose the installation method for your operating system:
+
+### 🍎 macOS & 🐧 Linux
+
+You can install `clenv` with a single command using our shell script:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/AnasNafees1802/clenv/main/install.sh | bash
 ```
 
-Then just run:
-
-```bash
-clenv
-```
-
-### Alternative installs
+Alternatively, you can install it via Python:
 
 ```bash
 # via pipx (recommended — keeps it isolated)
@@ -55,8 +55,31 @@ pipx install git+https://github.com/AnasNafees1802/clenv.git
 
 # via pip
 pip install git+https://github.com/AnasNafees1802/clenv.git
+```
 
-# run without installing (one-liner)
+---
+
+### 🪟 Windows (native PowerShell / Command Prompt)
+
+Since Windows does not natively run bash scripts, install `clenv` directly using your Python environment:
+
+```powershell
+# via pipx (recommended — keeps it isolated)
+pipx install git+https://github.com/AnasNafees1802/clenv.git
+
+# via pip
+pip install git+https://github.com/AnasNafees1802/clenv.git
+```
+
+*Note: Make sure your Python Scripts directory (e.g., `%USERPROFILE%\AppData\Local\Programs\Python\Python3xx\Scripts`) is in your system's PATH environment variable.*
+
+---
+
+### ⚡ Run without installing (One-liner)
+
+If you just want to run `clenv` once to clean your system without a permanent installation:
+
+```bash
 pipx run --spec git+https://github.com/AnasNafees1802/clenv.git clenv
 ```
 
